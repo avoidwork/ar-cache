@@ -14,17 +14,17 @@ const cjOutBase = { ...defaultOutBase, compact: false, format: "cjs", exports: "
 const esmOutBase = { ...defaultOutBase, format: "esm" };
 
 export default [
-  {
-    input: "./src/arc.js",
-    output: [
-      {
-        ...cjOutBase,
-        file: `dist/${pkg.name}.cjs`,
-      },
-      {
-        ...esmOutBase,
-        file: `dist/${pkg.name}.js`,
-      },
-    ],
-  },
+	{
+		input: "./src/arc.js",
+		output: [
+			{
+				...cjOutBase,
+				file: `dist/${pkg.name}.cjs`,
+			},
+			{
+				...esmOutBase,
+				file: `dist/${pkg.name}.js`,
+			},
+		],
+	},
 ];
