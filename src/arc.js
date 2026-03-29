@@ -4,17 +4,19 @@
  */
 export class ARC {
 	#size;
+	#p;
 
 	/**
 	 * @param {number} [size=100] - Maximum cache size
 	 */
 	constructor(size = 100) {
 		this.#size = size;
+		this.#p = 0;
 		this.cache = new Map();
-		this.p1 = new Map();
-		this.p2 = new Map();
 		this.t1 = new Map();
 		this.t2 = new Map();
+		this.b1 = new Map();
+		this.b2 = new Map();
 	}
 
 	/**
@@ -27,20 +29,29 @@ export class ARC {
 			return undefined;
 		}
 
-		if (this.p1.has(key)) {
-			this.p1.delete(key);
-			this.p2.set(key, true);
-			this.adjust();
-		} else if (this.p2.has(key)) {
-			this.p2.delete(key);
-			this.p2.set(key, true);
-		} else if (this.t1.has(key)) {
+		if (this.t1.has(key)) {
 			this.t1.delete(key);
 			this.t2.set(key, true);
-			this.adjust();
+			this.#adaptB1();
 		} else if (this.t2.has(key)) {
 			this.t2.delete(key);
 			this.t2.set(key, true);
+		} else if (this.b1.has(key)) {
+			this.b1.delete(key);
+			if (this.b2.size > 0) {
+				this.#p = Math.min(this.#size, this.#p + Math.floor(this.b2.size / this.b1.size));
+			}
+			this.#evictT1();
+			this.t1.set(key, true);
+			this.adjust();
+		} else if (this.b2.has(key)) {
+			this.b2.delete(key);
+			if (this.b1.size > 0) {
+				this.#p = Math.max(0, this.#p - Math.floor(this.b1.size / this.b2.size));
+			}
+			this.#evictT2();
+			this.t1.set(key, true);
+			this.adjust();
 		}
 
 		return this.cache.get(key);
@@ -58,26 +69,74 @@ export class ARC {
 			return;
 		}
 
-		while (this.cache.size >= this.#size) {
-			const delKey =
-				this.p1.keys().next().value ??
-				this.t1.keys().next().value ??
-				this.p2.keys().next().value ??
-				this.t2.keys().next().value;
+		if (this.t1.has(key) || this.t2.has(key)) {
+			return;
+		}
+
+		if (this.b1.has(key)) {
+			if (this.b2.size > 0) {
+				this.#p = Math.min(this.#size, this.#p + Math.floor(this.b2.size / this.b1.size));
+			}
+			const delKey = this.t1.keys().next().value ?? this.t2.keys().next().value;
 			if (delKey !== undefined) {
-				this.p1.delete(delKey);
-				this.p2.delete(delKey);
 				this.t1.delete(delKey);
 				this.t2.delete(delKey);
 				this.cache.delete(delKey);
+				this.b1.delete(delKey);
+				this.b2.delete(delKey);
+			}
+			this.t1.set(key, true);
+			this.cache.set(key, value);
+			return;
+		}
+
+		if (this.b2.has(key)) {
+			if (this.b1.size > 0) {
+				this.#p = Math.max(0, this.#p - Math.floor(this.b1.size / this.b2.size));
+			}
+			const delKey = this.t2.keys().next().value ?? this.t1.keys().next().value;
+			if (delKey !== undefined) {
+				this.t1.delete(delKey);
+				this.t2.delete(delKey);
+				this.cache.delete(delKey);
+				this.b1.delete(delKey);
+				this.b2.delete(delKey);
+			}
+			this.t1.set(key, true);
+			this.cache.set(key, value);
+			return;
+		}
+
+		while (this.cache.size >= this.#size) {
+			let delKey;
+			if (
+				this.t1.size > 0 &&
+				(this.#p >= this.#size || (this.#p < this.#size && this.b1.size < this.b2.size))
+			) {
+				delKey = this.t2.keys().next().value;
+				if (delKey !== undefined) {
+					this.t2.delete(delKey);
+					this.b2.set(delKey, true);
+				}
 			} else {
-				break;
+				delKey = this.t1.keys().next().value;
+				if (delKey !== undefined) {
+					this.t1.delete(delKey);
+					this.b1.set(delKey, true);
+				}
+			}
+			if (this.cache.size >= this.#size) {
+				const evicted = this.t1.keys().next().value ?? this.t2.keys().next().value;
+				if (evicted !== undefined) {
+					this.cache.delete(evicted);
+					this.b1.delete(evicted);
+					this.b2.delete(evicted);
+				}
 			}
 		}
 
 		this.cache.set(key, value);
-		this.p1.set(key, true);
-		this.adjust();
+		this.t1.set(key, true);
 	}
 
 	/**
@@ -87,10 +146,10 @@ export class ARC {
 	delete(key) {
 		if (this.cache.has(key)) {
 			this.cache.delete(key);
-			this.p1.delete(key);
-			this.p2.delete(key);
 			this.t1.delete(key);
 			this.t2.delete(key);
+			this.b1.delete(key);
+			this.b2.delete(key);
 		}
 	}
 
@@ -108,10 +167,10 @@ export class ARC {
 	 */
 	clear() {
 		this.cache.clear();
-		this.p1.clear();
-		this.p2.clear();
 		this.t1.clear();
 		this.t2.clear();
+		this.b1.clear();
+		this.b2.clear();
 	}
 
 	/**
@@ -128,6 +187,14 @@ export class ARC {
 	 */
 	get maxSize() {
 		return this.#size;
+	}
+
+	/**
+	 * Get current p boundary
+	 * @returns {number} - Current p value
+	 */
+	get p() {
+		return this.#p;
 	}
 
 	/**
@@ -174,24 +241,42 @@ export class ARC {
 	}
 
 	/**
-	 * Adjust cache boundaries between p1/p2 and t1/t2 lists
+	 * Adjust cache boundaries between t1/t2 and b1/b2 lists
 	 * Maintains adaptive balance based on access patterns
 	 */
 	adjust() {
-		const delta = Math.max(this.p1.size - this.p2.size, 0) / 2;
-		const targetP1Size = Math.floor((this.#size - delta) / 2);
-
-		while (this.p1.size > targetP1Size) {
-			const key = this.p1.keys().next().value;
-			this.p1.delete(key);
-			this.t1.set(key, true);
+		while (this.t1.size > this.#p) {
+			const key = this.t1.keys().next().value;
+			this.t1.delete(key);
+			this.b1.set(key, true);
 		}
 
-		const targetP2Size = this.#size - targetP1Size;
-		while (this.p2.size > targetP2Size) {
-			const key = this.p2.keys().next().value;
-			this.p2.delete(key);
-			this.t2.set(key, true);
+		while (this.t2.size > this.#size - this.#p) {
+			const key = this.t2.keys().next().value;
+			this.t2.delete(key);
+			this.b2.set(key, true);
+		}
+	}
+
+	#adaptB1() {
+		if (this.b1.size > 0) {
+			this.#p = Math.min(this.#size, this.#p + Math.floor(this.b2.size / this.b1.size));
+		}
+	}
+
+	#evictT1() {
+		const key = this.t1.keys().next().value;
+		if (key !== undefined) {
+			this.t1.delete(key);
+			this.b1.set(key, true);
+		}
+	}
+
+	#evictT2() {
+		const key = this.t2.keys().next().value;
+		if (key !== undefined) {
+			this.t2.delete(key);
+			this.b2.set(key, true);
 		}
 	}
 }

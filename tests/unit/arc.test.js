@@ -143,14 +143,49 @@ test("ARC class - eviction when over capacity", () => {
 	assert.strictEqual(cache.has("key4"), true);
 });
 
-test("ARC class - access pattern adaptation", () => {
+test("ARC class - ghost hit b1 increases t1", () => {
 	const cache = new ARC(4);
 	cache.set("a", 1);
 	cache.set("b", 2);
 	cache.set("c", 3);
+	cache.set("d", 4);
+	cache.delete("a");
+	cache.set("a", 10);
+	assert.strictEqual(cache.t1.has("a"), true);
+});
+
+test("ARC class - t2 promotion on multiple hits", () => {
+	const cache = new ARC(4);
+	cache.set("a", 1);
+	cache.set("b", 2);
 	cache.get("a");
 	cache.get("b");
+	cache.get("a");
+	cache.get("b");
+	cache.set("c", 3);
+	cache.set("d", 4);
+	assert.strictEqual(cache.size, 4);
+});
+
+test("ARC class - multiple evictions", () => {
+	const cache = new ARC(2);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("a", 10);
+	cache.set("c", 3);
+	assert.strictEqual(cache.size, 2);
+	assert.strictEqual(cache.has("a"), false);
+	assert.strictEqual(cache.has("b"), true);
+	assert.strictEqual(cache.has("c"), true);
+});
+
+test("ARC class - adjust boundary", () => {
+	const cache = new ARC(6);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("c", 3);
 	cache.set("d", 4);
 	cache.set("e", 5);
-	assert.strictEqual(cache.size, 4);
+	cache.set("f", 6);
+	assert.strictEqual(cache.size, 6);
 });
