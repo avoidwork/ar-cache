@@ -101,7 +101,7 @@ Contributions are welcome! Please read our contributing guidelines before submit
 
 ## License
 
-BSD-3-Clause - See [LICENSE](LICENSE) for details.
+BSD-3-Clause
 
 ## Acknowledgments
 
