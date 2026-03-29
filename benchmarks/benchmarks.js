@@ -3,40 +3,59 @@ import { ARC, arc } from "../src/arc.js";
 console.log("ARC Benchmarks");
 console.log("==============\n");
 
-// Test with small cache
-const smallCache = new ARC(10);
-const smallKeys = Array.from({ length: 20 }, (_, i) => `key${i}`);
+// Test with small cache (size 100)
+const smallCache = new ARC(100);
+const smallKeys = Array.from({ length: 200 }, (_, i) => `key${i}`);
 
-console.time("set 20 items to cache size 10");
+console.time("set 200 items to cache size 100");
 for (const key of smallKeys) {
 	smallCache.set(key, `value${key}`);
 }
-console.timeEnd("set 20 items to cache size 10");
+console.timeEnd("set 200 items to cache size 100");
 
-console.time("get 20 items from cache size 10");
+console.time("get 200 items from cache size 100");
 for (const key of smallKeys) {
 	smallCache.get(key);
 }
-console.timeEnd("get 20 items from cache size 10");
+console.timeEnd("get 200 items from cache size 100");
 
 console.log(`Cache size after operations: ${smallCache.size}`);
 console.log(`Max size: ${smallCache.maxSize}\n`);
 
-// Test with large cache
-const largeCache = new ARC(1000);
-const largeKeys = Array.from({ length: 2000 }, (_, i) => `largekey${i}`);
+// Test with medium cache (size 1000)
+const mediumCache = new ARC(1000);
+const mediumKeys = Array.from({ length: 2000 }, (_, i) => `mediumkey${i}`);
 
 console.time("set 2000 items to cache size 1000");
-for (const key of largeKeys) {
-	largeCache.set(key, { data: `value${key}`, timestamp: Date.now() });
+for (const key of mediumKeys) {
+	mediumCache.set(key, { data: `value${key}`, timestamp: Date.now() });
 }
 console.timeEnd("set 2000 items to cache size 1000");
 
 console.time("get 2000 items from cache size 1000");
+for (const key of mediumKeys) {
+	mediumCache.get(key);
+}
+console.timeEnd("get 2000 items from cache size 1000");
+
+console.log(`Cache size after operations: ${mediumCache.size}`);
+console.log(`Max size: ${mediumCache.maxSize}\n`);
+
+// Test with large cache (size 10000)
+const largeCache = new ARC(10000);
+const largeKeys = Array.from({ length: 20000 }, (_, i) => `largekey${i}`);
+
+console.time("set 20000 items to cache size 10000");
+for (const key of largeKeys) {
+	largeCache.set(key, { data: `value${key}`, timestamp: Date.now() });
+}
+console.timeEnd("set 20000 items to cache size 10000");
+
+console.time("get 20000 items from cache size 10000");
 for (const key of largeKeys) {
 	largeCache.get(key);
 }
-console.timeEnd("get 2000 items from cache size 1000");
+console.timeEnd("get 20000 items from cache size 10000");
 
 console.log(`Cache size after operations: ${largeCache.size}`);
 console.log(`Max size: ${largeCache.maxSize}\n`);
@@ -85,9 +104,9 @@ testCache.clear();
 console.timeEnd("clear cache");
 console.log(`Cache size after clear: ${testCache.size}\n`);
 
-// Test iteration
-const iterCache = new ARC(500);
-const iterKeys = Array.from({ length: 500 }, (_, i) => `iterkey${i}`);
+// Test iteration with size 1000
+const iterCache = new ARC(1000);
+const iterKeys = Array.from({ length: 1000 }, (_, i) => `iterkey${i}`);
 
 for (const key of iterKeys) {
 	iterCache.set(key, `value${key}`);
@@ -126,7 +145,7 @@ console.log(`JSON size property: ${json.size}`);
 console.log(`JSON entries count: ${json.entries.length}\n`);
 
 // Test update existing key
-const updateCache = new ARC(10);
+const updateCache = new ARC(100);
 
 console.time("update 50 existing keys");
 for (let i = 0; i < 50; i++) {
