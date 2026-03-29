@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "coverage": "node --test --experimental-test-coverage --test-coverage-exclude=dist/** --test-coverage-exclude=tests/** --test-reporter=spec tests/**/*.test.js 2>&1 | grep -A 1000 \"start of coverage report\" > coverage.txt && ! grep -q \"failing tests\" coverage.txt",
+    "fix": "oxlint --fix *.js benchmarks src tests && oxfmt *.js benchmarks src tests/unit --write",
+    "lint": "oxlint *.js benchmarks src tests && oxfmt *.js benchmarks src tests/unit --check",
+    "prepare": "husky",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,6 +15,8 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "auto-changelog": "^2.5.0",
+    "husky": "^9.1.7",
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
     "rollup": "^4.60.0"
