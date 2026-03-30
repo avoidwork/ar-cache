@@ -2,7 +2,6 @@
 
 [![npm version](https://badge.fury.io/js/tiny-arc.svg)](https://badge.fury.io/js/tiny-arc)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
-[![Node.js Version](https://img.shields.io/node/v/tiny-arc.svg)](https://nodejs.org)
 [![npm downloads](https://img.shields.io/npm/dm/tiny-arc.svg)](https://www.npmjs.com/package/tiny-arc)
 
 A lightweight ARC cache implementation for Node.js and browsers.
