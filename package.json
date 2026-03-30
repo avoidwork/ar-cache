@@ -2,7 +2,6 @@
   "name": "tiny-arc",
   "version": "1.0.0",
   "description": "A lightweight ARC cache implementation for Node.js and browsers.",
-  "main": "index.js",
   "scripts": {
     "build": "npm run rollup",
     "changelog": "auto-changelog -p",
