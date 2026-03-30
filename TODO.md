@@ -84,31 +84,40 @@
 ---
 
 ### 6. [MEDIUM] Missing edge case handling
-**Location**: `src/arc.js:85-102, 56-76`
+**Location**: `src/arc.js:90-125`
 
 **Issue**: No guards against:
 - Empty T1/T2 during eviction (could cause undefined behavior)
 - Division by zero in p adjustments (already partially handled with `Math.max(1, ...)`)
 
-**Status**: ⏳ Pending
+**Status**: ✅ Fixed
+
+**Fix applied**:
+- Added fallback eviction when preferred list is empty
+- Added safety break to prevent infinite loop if no keys can be evicted
+- Division by zero already handled with `Math.max(1, ...)`
 
 ---
 
 ### 7. [MEDIUM] Verify B1 ghost hit evicts from T2
-**Location**: `src/arc.js:61-65`
+**Location**: `src/arc.js:68-72`
 
 **Issue**: When B1 ghost hit occurs, should evict from T2→B2. Current code does this, but need to verify it handles empty T2 correctly.
 
-**Status**: ⏳ Pending
+**Status**: ✅ Verified
+
+**Note**: Code correctly evicts from T2. Handles empty T2 gracefully (no-op if T2 is empty).
 
 ---
 
 ### 8. [MEDIUM] Verify B2 ghost hit evicts from T1
-**Location**: `src/arc.js:73-76`
+**Location**: `src/arc.js:80-84`
 
 **Issue**: When B2 ghost hit occurs, should evict from T1→B1. Current code does this, but need to verify it handles empty T1 correctly.
 
-**Status**: ⏳ Pending
+**Status**: ✅ Verified
+
+**Note**: Code correctly evicts from T1. Handles empty T1 gracefully (no-op if T1 is empty).
 
 ---
 
@@ -150,16 +159,16 @@
 
 | # | Issue | Priority | Status |
 |---|-------|----------|--------|
-| 1 | `get()` method violation | HIGH | ⏳ Pending |
-| 2 | Cache miss eviction logic | HIGH | ⏳ Pending |
-| 3 | `delete()` method balance | HIGH | ⏳ Pending |
-| 4 | B1 ghost hit p-adjustment | HIGH | ⏳ Pending |
-| 5 | B2 ghost hit p-adjustment | HIGH | ⏳ Pending |
-| 6 | Edge case handling | MEDIUM | ⏳ Pending |
-| 7 | B1 ghost hit T2 eviction | MEDIUM | ⏳ Pending |
-| 8 | B2 ghost hit T1 eviction | MEDIUM | ⏳ Pending |
-| 9 | Comprehensive tests | HIGH | ⏳ Pending |
-| 10 | Fix existing tests | MEDIUM | ⏳ Pending |
+| 1 | `get()` method violation | HIGH | ✅ Fixed |
+| 2 | Cache miss eviction logic | HIGH | ✅ Fixed |
+| 3 | `delete()` method balance | HIGH | ✅ Fixed |
+| 4 | B1 ghost hit p-adjustment | HIGH | ✅ Verified |
+| 5 | B2 ghost hit p-adjustment | HIGH | ✅ Verified |
+| 6 | Edge case handling | MEDIUM | ✅ Fixed |
+| 7 | B1 ghost hit T2 eviction | MEDIUM | ✅ Verified |
+| 8 | B2 ghost hit T1 eviction | MEDIUM | ✅ Verified |
+| 9 | Comprehensive tests | HIGH | ✅ Fixed |
+| 10 | Fix existing tests | MEDIUM | ✅ Fixed |
 
 ---
 
