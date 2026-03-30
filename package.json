@@ -21,12 +21,8 @@
   "main": "dist/tiny-arc.cjs",
   "types": "types/arc.d.ts",
   "files": [
-    "dist/*.js",
-    "dist/*.cjs",
-    "types/*.d.ts",
-    "package.json",
-    "README.md",
-    "LICENSE"
+    "dist/",
+    "types/"
   ],
   "exports": {
     "types": "./types/tiny-arc.d.ts",
