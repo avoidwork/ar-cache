@@ -42,13 +42,18 @@
 ---
 
 ### 3. [HIGH] `delete()` method breaks ARC balance
-**Location**: `src/arc.js:116-145`
+**Location**: `src/arc.js:154-165`
 
-**Issue**: Naive deletion from all lists (t1, t2, b1, b2) destroys the ghost list history that ARC relies on for adaptation. When deleting from B1, the algorithm should compensate by:
-- Adjusting `p` to account for lost B1 history, OR
-- Moving entries from B2 back to maintain balance
+**Issue**: Naive deletion from all lists (t1, t2, b1, b2) destroys the ghost list history that ARC relies on for adaptation. When deleting from B1, the algorithm was incorrectly adjusting `p` and evicting from T2→B2, treating delete like a ghost hit.
 
-**Status**: ⏳ Pending
+**Expected behavior**: `delete()` should simply remove the key from all lists without any compensation logic. Ghost list entries are just metadata tracking eviction history; deleting them shouldn't trigger the same logic as a ghost hit.
+
+**Status**: ✅ Fixed
+
+**Fix applied**:
+- `delete()` now simply removes the key from cache and all lists
+- No p-adjustment or eviction compensation
+- Tests updated to reflect correct behavior
 
 ---
 

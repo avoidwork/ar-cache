@@ -335,9 +335,11 @@ test("ARC class - B1 ghost hit with B2 populated", () => {
 	assert.strictEqual(cache.b1.size, 1);
 	assert.strictEqual(cache.b2.size, 0);
 	assert.ok(cache.b1.has(records[2].id));
+	// delete() on ghost entry just removes it, no compensation
 	cache.delete(records[2].id);
 	assert.strictEqual(cache.b1.size, 0);
-	assert.ok(cache.b2.has(records[0].id));
+	// B2 should still be empty (no compensation happened)
+	assert.strictEqual(cache.b2.size, 0);
 	cache.set(records[5].id, records[5]);
 	assert.strictEqual(cache.size, 4);
 });
@@ -442,12 +444,15 @@ test("ARC class - B1 ghost hit with T2 entries covering t2.delete", () => {
 	// T2 should have 1 entry (records[1], since records[0] was evicted)
 	assert.strictEqual(cache.t2.size, 1);
 
-	// B1 ghost hit on records[2] - this should delete from T2 (lines 62-63)
+	// delete() on B1 ghost just removes it, no compensation
 	cache.delete(records[2].id);
+	assert.strictEqual(cache.b1.size, 0);
+
+	// set() is now a regular cache miss (not a B1 ghost hit since we deleted it)
 	cache.set(records[2].id, records[2]);
 
-	// T2 should have 0 entries (the remaining one was deleted during B1 ghost hit)
-	assert.strictEqual(cache.t2.size, 0);
+	// T2 should still have 1 entry (no B1 ghost hit occurred)
+	assert.strictEqual(cache.t2.size, 1);
 });
 
 test("ARC class - B2 ghost hit with T1 entries covering t1.delete and b1.set", () => {
@@ -464,19 +469,18 @@ test("ARC class - B2 ghost hit with T1 entries covering t1.delete and b1.set", (
 	// Manually add to b2 to enable B2 ghost hit
 	cache.b2.set(records[6].id, true);
 
-	// Get t1 key before B2 ghost hit
+	// Get t1 key before delete
 	const t1KeysBefore = [...cache.t1.keys()];
 
+	// delete() on B2 ghost just removes it, no compensation
 	cache.delete(records[6].id);
+	assert.strictEqual(cache.b2.size, 0);
+
+	// set() is now a regular cache miss (not a B2 ghost hit since we deleted it)
 	cache.set(records[6].id, records[6]);
 
-	// T1 should have lost an entry (deleted by B2 ghost hit handler)
-	assert.strictEqual(cache.t1.size, t1KeysBefore.length - 1);
-
-	// The deleted key should now be in b1
-	const deletedKey = t1KeysBefore.find((k) => !cache.t1.has(k));
-	assert.ok(deletedKey !== undefined);
-	assert.ok(cache.b1.has(deletedKey));
+	// T1 should have same size (no B2 ghost hit occurred)
+	assert.strictEqual(cache.t1.size, t1KeysBefore.length);
 });
 
 test("ARC class - B1 ghost hit via set with T2 eviction", () => {
