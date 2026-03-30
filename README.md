@@ -1,8 +1,8 @@
 # Adaptive Replacement Cache
 
-[![npm version](https://badge.fury.io/js/ar-cache.svg)](https://badge.fury.io/js/ar-cache)
+[![npm version](https://badge.fury.io/js/adaptive-replacement-cache.svg)](https://badge.fury.io/js/adaptive-replacement-cache)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
-[![npm downloads](https://img.shields.io/npm/dm/ar-cache.svg)](https://www.npmjs.com/package/ar-cache)
+[![npm downloads](https://img.shields.io/npm/dm/adaptive-replacement-cache.svg)](https://www.npmjs.com/package/adaptive-replacement-cache)
 
 A lightweight ARC cache implementation for Node.js and browsers.
 
@@ -17,13 +17,13 @@ A lightweight ARC cache implementation for Node.js and browsers.
 
 ```bash
 # npm
-npm install ar-cache
+npm install adaptive-replacement-cache
 
 # pnpm
-pnpm add ar-cache
+pnpm add adaptive-replacement-cache
 
 # yarn
-yarn add ar-cache
+yarn add adaptive-replacement-cache
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ yarn add ar-cache
 ### ES Modules
 
 ```js
-import { ARC, arc } from 'ar-cache';
+import { ARC, arc } from 'adaptive-replacement-cache';
 
 // Direct class usage
 const cache = new ARC(100);
@@ -45,7 +45,7 @@ const cache2 = arc({ size: 100 });
 ### CommonJS
 
 ```js
-const { ARC, arc } = require('ar-cache');
+const { ARC, arc } = require('adaptive-replacement-cache');
 
 const cache = arc({ size: 100 });
 cache.set('key', 'value');

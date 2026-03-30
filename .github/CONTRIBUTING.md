@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to ar-cache! Please read these guidelines before submitting a pull request.
+Thank you for your interest in contributing to adaptive-replacement-cache! Please read these guidelines before submitting a pull request.
 
 ## Getting Started
 

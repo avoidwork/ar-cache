@@ -19,11 +19,11 @@ export default [
 		output: [
 			{
 				...cjOutBase,
-				file: `dist/${pkg.name}.cjs`,
+				file: `dist/arc.cjs`,
 			},
 			{
 				...esmOutBase,
-				file: `dist/${pkg.name}.js`,
+				file: `dist/arc.js`,
 			},
 		],
 	},

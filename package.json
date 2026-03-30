@@ -1,19 +1,19 @@
 {
-  "name": "ar-cache",
+  "name": "adaptive-replacement-cache",
   "version": "1.0.0",
   "description": "A lightweight ARC cache implementation for Node.js and browsers.",
-  "homepage": "https://github.com/avoidwork/ar-cache#readme",
+  "homepage": "https://github.com/avoidwork/adaptive-replacement-cache#readme",
   "bugs": {
-    "url": "https://github.com/avoidwork/ar-cache/issues"
+    "url": "https://github.com/avoidwork/adaptive-replacement-cache/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/avoidwork/ar-cache.git"
+    "url": "git+https://github.com/avoidwork/adaptive-replacement-cache.git"
   },
   "license": "BSD-3-Clause",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "type": "module",
-  "main": "dist/ar-cache.cjs",
+  "main": "dist/adaptive-replacement-cache.cjs",
   "directories": {
     "doc": "docs",
     "test": "tests"
@@ -42,14 +42,14 @@
   ],
   "types": "types/arc.d.ts",
   "files": [
-    "dist/ar-cache.js",
-    "dist/ar-cache.cjs",
+    "dist/arc.js",
+    "dist/arc.cjs",
     "types/arc.d.ts"
   ],
   "exports": {
     "types": "./types/arc.d.ts",
-    "import": "./dist/ar-cache.js",
-    "require": "./dist/ar-cache.cjs"
+    "import": "./dist/arc.js",
+    "require": "./dist/arc.cjs"
   },
   "dependencies": {},
   "devDependencies": {

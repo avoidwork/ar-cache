@@ -2,17 +2,17 @@
 
 ## Project Overview
 
-**ar-cache** - A minimal ARC (Adaptive Replacement Cache) implementation in JavaScript.
+**adaptive-replacement-cache** - A minimal ARC (Adaptive Replacement Cache) implementation in JavaScript.
 
 ## Project Structure
 
 ```
-/ar-cache/
+/adaptive-replacement-cache/
 ├── src/
 │   └── arc.js          # ARC class implementation
 ├── dist/               # Built output (generated)
-│   ├── ar-cache.cjs    # CommonJS build
-│   └── ar-cache.js     # ES Module build
+│   ├── adaptive-replacement-cache.cjs    # CommonJS build
+│   └── adaptive-replacement-cache.js     # ES Module build
 ├── tests/unit/         # Unit tests directory
 ├── node_modules/       # Dependencies (gitignored)
 ├── .gitignore
@@ -103,8 +103,8 @@ Based on the [ARC algorithm](https://en.wikipedia.org/wiki/Adaptive_replacement_
 
 1. Rollup reads `./src/arc.js` as entry point
 2. Outputs two bundles to `dist/`:
-   - `ar-cache.cjs` - CommonJS with named exports
-   - `ar-cache.js` - ES Module with named exports
+   - `adaptive-replacement-cache.cjs` - CommonJS with named exports
+   - `adaptive-replacement-cache.js` - ES Module with named exports
 3. Both include generated banner with copyright info
 
 ## Development Workflow
@@ -139,4 +139,4 @@ When ready to publish:
 - `node_modules` and `dist` are gitignored
 - Package type is ESM (`"type": "module"`)
 - Exports field in package.json defines dual CJS/ESM support
-- Main entry points: `./dist/ar-cache.cjs` (require) and `./dist/ar-cache.js` (import)
+- Main entry points: `./dist/adaptive-replacement-cache.cjs` (require) and `./dist/adaptive-replacement-cache.js` (import)

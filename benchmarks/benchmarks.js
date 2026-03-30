@@ -1,4 +1,4 @@
-import { ARC, arc } from "../dist/ar-cache.js";
+import { ARC, arc } from "../dist/adaptive-replacement-cache.js";
 
 console.log("ARC Benchmarks");
 console.log("==============\n");

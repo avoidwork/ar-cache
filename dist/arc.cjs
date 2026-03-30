@@ -1,5 +1,5 @@
 /**
- * ar-cache
+ * adaptive-replacement-cache
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause

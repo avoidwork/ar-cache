@@ -199,7 +199,7 @@ const cache = arc({ size: 50 });
 ### Basic Usage
 
 ```javascript
-import { ARC, arc } from 'ar-cache';
+import { ARC, arc } from 'adaptive-replacement-cache';
 
 // Using the class directly
 const cache1 = new ARC(100);

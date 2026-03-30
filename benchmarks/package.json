@@ -2,7 +2,7 @@
 	"name": "benchmarks",
 	"version": "1.0.0",
 	"private": true,
-	"description": "Benchmark suite for ar-cache",
+	"description": "Benchmark suite for adaptive-replacement-cache",
 	"keywords": [],
 	"license": "BSD-3-Clause",
 	"author": "",
