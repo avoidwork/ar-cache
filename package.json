@@ -1,6 +1,6 @@
 {
   "name": "adaptive-replacement-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight ARC cache implementation for Node.js and browsers.",
   "homepage": "https://github.com/avoidwork/adaptive-replacement-cache#readme",
   "bugs": {
