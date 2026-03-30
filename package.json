@@ -2,6 +2,22 @@
   "name": "tiny-arc",
   "version": "1.0.0",
   "description": "A lightweight ARC cache implementation for Node.js and browsers.",
+  "homepage": "https://github.com/avoidwork/tiny-arc#readme",
+  "bugs": {
+    "url": "https://github.com/avoidwork/tiny-arc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avoidwork/tiny-arc.git"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
+  "type": "module",
+  "main": "dist/tiny-arc.cjs",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
   "scripts": {
     "build": "npm run rollup",
     "changelog": "auto-changelog -p",
@@ -24,18 +40,6 @@
     "cjs",
     "esm"
   ],
-  "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/avoidwork/tiny-arc.git"
-  },
-  "homepage": "https://github.com/avoidwork/tiny-arc#readme",
-  "bugs": {
-    "url": "https://github.com/avoidwork/tiny-arc/issues"
-  },
-  "license": "BSD-3-Clause",
-  "type": "module",
-  "main": "dist/tiny-arc.cjs",
   "types": "types/arc.d.ts",
   "files": [
     "dist/tiny-arc.js",
@@ -47,6 +51,7 @@
     "import": "./dist/tiny-arc.js",
     "require": "./dist/tiny-arc.cjs"
   },
+  "dependencies": {},
   "devDependencies": {
     "auto-changelog": "^2.5.0",
     "husky": "^9.1.7",

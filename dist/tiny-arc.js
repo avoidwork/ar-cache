@@ -1,7 +1,7 @@
 /**
  * tiny-arc
  *
- * @copyright 2026 
+ * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
  * @version 1.0.0
  */
