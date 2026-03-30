@@ -1,4 +1,4 @@
-import { ARC, arc } from "../src/arc.js";
+import { ARC, arc } from "../dist/tiny-arc.js";
 
 console.log("ARC Benchmarks");
 console.log("==============\n");
