@@ -120,28 +120,6 @@ export class ARC {
 			this.t2.delete(key);
 			this.b1.delete(key);
 			this.b2.delete(key);
-			return;
-		}
-
-		if (this.b1.has(key)) {
-			this.#p = Math.max(0, this.#p - Math.floor(this.b2.size / Math.max(1, this.b1.size)));
-			const delKey = this.t2.keys().next().value;
-			if (delKey !== undefined) {
-				this.t2.delete(delKey);
-				this.b2.set(delKey, true);
-			}
-			this.b1.delete(key);
-		} else if (this.b2.has(key)) {
-			this.#p = Math.min(
-				this.#size,
-				this.#p + Math.floor(this.b1.size / Math.max(1, this.b2.size)),
-			);
-			const delKey = this.t1.keys().next().value;
-			if (delKey !== undefined) {
-				this.t1.delete(delKey);
-				this.b1.set(delKey, true);
-			}
-			this.b2.delete(key);
 		}
 	}
 

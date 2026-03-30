@@ -316,18 +316,26 @@ test("ARC class - adjust t1 boundary", () => {
 	assert.strictEqual(cache.size, 5);
 });
 
-// Note: T2 eviction path (lines 89-93) is difficult to test with current API
-// because B1 ghost hits only increase p when b2.size > 0, and b2 can only be
-// populated when T2 evicts which requires p to be adjusted first.
-// The eviction logic is covered through the cache at capacity eviction tests.
-test("ARC class - trigger T2 eviction path", () => {
-	const cache = new ARC(50);
+test("ARC class - B1 ghost hit with B2 populated", () => {
+	const cache = new ARC(4);
 	cache.set(records[0].id, records[0]);
 	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
 	cache.set(records[2].id, records[2]);
 	cache.set(records[3].id, records[3]);
 	cache.set(records[4].id, records[4]);
-	assert.strictEqual(cache.size, 5);
+	assert.strictEqual(cache.size, 4);
+	assert.strictEqual(cache.b1.size, 1);
+	assert.strictEqual(cache.b2.size, 0);
+	assert.ok(cache.b1.has(records[2].id));
+	cache.delete(records[2].id);
+	assert.strictEqual(cache.b1.size, 0);
+	assert.ok(cache.b2.has(records[0].id));
+	cache.set(records[5].id, records[5]);
+	assert.strictEqual(cache.size, 4);
 });
 
 test("ARC class - p getter", () => {
@@ -468,4 +476,53 @@ test("ARC class - B2 ghost hit with T1 entries covering t1.delete and b1.set", (
 	const deletedKey = t1KeysBefore.find((k) => !cache.t1.has(k));
 	assert.ok(deletedKey !== undefined);
 	assert.ok(cache.b1.has(deletedKey));
+});
+
+test("ARC class - B1 ghost hit via set with T2 eviction", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.set(records[2].id, records[2]);
+	cache.set(records[3].id, records[3]);
+	cache.set(records[4].id, records[4]);
+
+	// T2 should have 2 entries, B1 should have 1 entry (records[2])
+	assert.strictEqual(cache.t2.size, 2);
+	assert.ok(cache.b1.has(records[2].id));
+
+	// B1 ghost hit on records[2] via set should evict from T2 (lines 62-63)
+	cache.set(records[2].id, { ...records[2], value: 999 });
+
+	// T2 should have 1 entry (one was evicted during B1 ghost hit)
+	assert.strictEqual(cache.t2.size, 1);
+	assert.strictEqual(cache.get(records[2].id).value, 999);
+});
+
+test("ARC class - B2 ghost hit via set with T1 eviction", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.set(records[2].id, records[2]);
+	cache.set(records[3].id, records[3]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+
+	// Manually add to b2 to simulate B2 ghost
+	cache.b2.set(records[4].id, true);
+
+	// T1 should have entries, B2 has ghost
+	assert.strictEqual(cache.t1.size, 2);
+
+	// B2 ghost hit on records[4] via set should evict from T1 (lines 74-75)
+	cache.set(records[4].id, records[4]);
+
+	// T1 should have 1 entry (one was evicted during B2 ghost hit)
+	assert.strictEqual(cache.t1.size, 1);
+	assert.strictEqual(cache.get(records[4].id), records[4]);
 });
