@@ -11,7 +11,8 @@
     "lint": "oxlint *.js benchmarks src tests && oxfmt *.js benchmarks src tests/unit --check",
     "prepare": "husky",
     "rollup": "rollup --config",
-    "test": "npm run lint && node --test tests/**/*.test.js"
+    "test": "npm run lint && node --test tests/**/*.test.js",
+    "benchmarks": "node benchmarks/benchmarks.js"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,6 @@
   "types": "types/arc.d.ts",
   "files": [
     "dist",
-    "tpl",
     "types"
   ],
   "exports": {
