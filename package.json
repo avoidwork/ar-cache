@@ -13,7 +13,7 @@
   "license": "BSD-3-Clause",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "type": "module",
-  "main": "dist/adaptive-replacement-cache.cjs",
+  "main": "dist/arc.cjs",
   "directories": {
     "doc": "docs",
     "test": "tests"
