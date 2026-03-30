@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "name": "Record 1",
+    "value": 100,
+    "category": "A"
+  },
+  {
+    "id": 2,
+    "name": "Record 2",
+    "value": 200,
+    "category": "B"
+  },
+  {
+    "id": 3,
+    "name": "Record 3",
+    "value": 300,
+    "category": "A"
+  },
+  {
+    "id": 4,
+    "name": "Record 4",
+    "value": 400,
+    "category": "C"
+  },
+  {
+    "id": 5,
+    "name": "Record 5",
+    "value": 500,
+    "category": "B"
+  },
+  {
+    "id": 6,
+    "name": "Record 6",
+    "value": 600,
+    "category": "A"
+  },
+  {
+    "id": 7,
+    "name": "Record 7",
+    "value": 700,
+    "category": "C"
+  },
+  {
+    "id": 8,
+    "name": "Record 8",
+    "value": 800,
+    "category": "B"
+  },
+  {
+    "id": 9,
+    "name": "Record 9",
+    "value": 900,
+    "category": "A"
+  },
+  {
+    "id": 10,
+    "name": "Record 10",
+    "value": 1000,
+    "category": "C"
+  },
+  {
+    "id": 11,
+    "name": "Record 11",
+    "value": 1100,
+    "category": "A"
+  },
+  {
+    "id": 12,
+    "name": "Record 12",
+    "value": 1200,
+    "category": "B"
+  },
+  {
+    "id": 13,
+    "name": "Record 13",
+    "value": 1300,
+    "category": "C"
+  },
+  {
+    "id": 14,
+    "name": "Record 14",
+    "value": 1400,
+    "category": "A"
+  },
+  {
+    "id": 15,
+    "name": "Record 15",
+    "value": 1500,
+    "category": "B"
+  },
+  {
+    "id": 16,
+    "name": "Record 16",
+    "value": 1600,
+    "category": "C"
+  },
+  {
+    "id": 17,
+    "name": "Record 17",
+    "value": 1700,
+    "category": "A"
+  },
+  {
+    "id": 18,
+    "name": "Record 18",
+    "value": 1800,
+    "category": "B"
+  },
+  {
+    "id": 19,
+    "name": "Record 19",
+    "value": 1900,
+    "category": "C"
+  },
+  {
+    "id": 20,
+    "name": "Record 20",
+    "value": 2000,
+    "category": "A"
+  },
+  {
+    "id": 21,
+    "name": "Record 21",
+    "value": 2100,
+    "category": "B"
+  },
+  {
+    "id": 22,
+    "name": "Record 22",
+    "value": 2200,
+    "category": "C"
+  },
+  {
+    "id": 23,
+    "name": "Record 23",
+    "value": 2300,
+    "category": "A"
+  },
+  {
+    "id": 24,
+    "name": "Record 24",
+    "value": 2400,
+    "category": "B"
+  },
+  {
+    "id": 25,
+    "name": "Record 25",
+    "value": 2500,
+    "category": "C"
+  },
+  {
+    "id": 26,
+    "name": "Record 26",
+    "value": 2600,
+    "category": "A"
+  },
+  {
+    "id": 27,
+    "name": "Record 27",
+    "value": 2700,
+    "category": "B"
+  },
+  {
+    "id": 28,
+    "name": "Record 28",
+    "value": 2800,
+    "category": "C"
+  },
+  {
+    "id": 29,
+    "name": "Record 29",
+    "value": 2900,
+    "category": "A"
+  },
+  {
+    "id": 30,
+    "name": "Record 30",
+    "value": 3000,
+    "category": "B"
+  },
+  {
+    "id": 31,
+    "name": "Record 31",
+    "value": 3100,
+    "category": "C"
+  },
+  {
+    "id": 32,
+    "name": "Record 32",
+    "value": 3200,
+    "category": "A"
+  },
+  {
+    "id": 33,
+    "name": "Record 33",
+    "value": 3300,
+    "category": "B"
+  },
+  {
+    "id": 34,
+    "name": "Record 34",
+    "value": 3400,
+    "category": "C"
+  },
+  {
+    "id": 35,
+    "name": "Record 35",
+    "value": 3500,
+    "category": "A"
+  },
+  {
+    "id": 36,
+    "name": "Record 36",
+    "value": 3600,
+    "category": "B"
+  },
+  {
+    "id": 37,
+    "name": "Record 37",
+    "value": 3700,
+    "category": "C"
+  },
+  {
+    "id": 38,
+    "name": "Record 38",
+    "value": 3800,
+    "category": "A"
+  },
+  {
+    "id": 39,
+    "name": "Record 39",
+    "value": 3900,
+    "category": "B"
+  },
+  {
+    "id": 40,
+    "name": "Record 40",
+    "value": 4000,
+    "category": "C"
+  },
+  {
+    "id": 41,
+    "name": "Record 41",
+    "value": 4100,
+    "category": "A"
+  },
+  {
+    "id": 42,
+    "name": "Record 42",
+    "value": 4200,
+    "category": "B"
+  },
+  {
+    "id": 43,
+    "name": "Record 43",
+    "value": 4300,
+    "category": "C"
+  },
+  {
+    "id": 44,
+    "name": "Record 44",
+    "value": 4400,
+    "category": "A"
+  },
+  {
+    "id": 45,
+    "name": "Record 45",
+    "value": 4500,
+    "category": "B"
+  },
+  {
+    "id": 46,
+    "name": "Record 46",
+    "value": 4600,
+    "category": "C"
+  },
+  {
+    "id": 47,
+    "name": "Record 47",
+    "value": 4700,
+    "category": "A"
+  },
+  {
+    "id": 48,
+    "name": "Record 48",
+    "value": 4800,
+    "category": "B"
+  },
+  {
+    "id": 49,
+    "name": "Record 49",
+    "value": 4900,
+    "category": "C"
+  },
+  {
+    "id": 50,
+    "name": "Record 50",
+    "value": 5000,
+    "category": "A"
+  },
+  {
+    "id": 51,
+    "name": "Record 51",
+    "value": 5100,
+    "category": "B"
+  },
+  {
+    "id": 52,
+    "name": "Record 52",
+    "value": 5200,
+    "category": "C"
+  },
+  {
+    "id": 53,
+    "name": "Record 53",
+    "value": 5300,
+    "category": "A"
+  },
+  {
+    "id": 54,
+    "name": "Record 54",
+    "value": 5400,
+    "category": "B"
+  },
+  {
+    "id": 55,
+    "name": "Record 55",
+    "value": 5500,
+    "category": "C"
+  },
+  {
+    "id": 56,
+    "name": "Record 56",
+    "value": 5600,
+    "category": "A"
+  },
+  {
+    "id": 57,
+    "name": "Record 57",
+    "value": 5700,
+    "category": "B"
+  },
+  {
+    "id": 58,
+    "name": "Record 58",
+    "value": 5800,
+    "category": "C"
+  },
+  {
+    "id": 59,
+    "name": "Record 59",
+    "value": 5900,
+    "category": "A"
+  },
+  {
+    "id": 60,
+    "name": "Record 60",
+    "value": 6000,
+    "category": "B"
+  },
+  {
+    "id": 61,
+    "name": "Record 61",
+    "value": 6100,
+    "category": "C"
+  },
+  {
+    "id": 62,
+    "name": "Record 62",
+    "value": 6200,
+    "category": "A"
+  },
+  {
+    "id": 63,
+    "name": "Record 63",
+    "value": 6300,
+    "category": "B"
+  },
+  {
+    "id": 64,
+    "name": "Record 64",
+    "value": 6400,
+    "category": "C"
+  },
+  {
+    "id": 65,
+    "name": "Record 65",
+    "value": 6500,
+    "category": "A"
+  },
+  {
+    "id": 66,
+    "name": "Record 66",
+    "value": 6600,
+    "category": "B"
+  },
+  {
+    "id": 67,
+    "name": "Record 67",
+    "value": 6700,
+    "category": "C"
+  },
+  {
+    "id": 68,
+    "name": "Record 68",
+    "value": 6800,
+    "category": "A"
+  },
+  {
+    "id": 69,
+    "name": "Record 69",
+    "value": 6900,
+    "category": "B"
+  },
+  {
+    "id": 70,
+    "name": "Record 70",
+    "value": 7000,
+    "category": "C"
+  },
+  {
+    "id": 71,
+    "name": "Record 71",
+    "value": 7100,
+    "category": "A"
+  },
+  {
+    "id": 72,
+    "name": "Record 72",
+    "value": 7200,
+    "category": "B"
+  },
+  {
+    "id": 73,
+    "name": "Record 73",
+    "value": 7300,
+    "category": "C"
+  },
+  {
+    "id": 74,
+    "name": "Record 74",
+    "value": 7400,
+    "category": "A"
+  },
+  {
+    "id": 75,
+    "name": "Record 75",
+    "value": 7500,
+    "category": "B"
+  },
+  {
+    "id": 76,
+    "name": "Record 76",
+    "value": 7600,
+    "category": "C"
+  },
+  {
+    "id": 77,
+    "name": "Record 77",
+    "value": 7700,
+    "category": "A"
+  },
+  {
+    "id": 78,
+    "name": "Record 78",
+    "value": 7800,
+    "category": "B"
+  },
+  {
+    "id": 79,
+    "name": "Record 79",
+    "value": 7900,
+    "category": "C"
+  },
+  {
+    "id": 80,
+    "name": "Record 80",
+    "value": 8000,
+    "category": "A"
+  },
+  {
+    "id": 81,
+    "name": "Record 81",
+    "value": 8100,
+    "category": "B"
+  },
+  {
+    "id": 82,
+    "name": "Record 82",
+    "value": 8200,
+    "category": "C"
+  },
+  {
+    "id": 83,
+    "name": "Record 83",
+    "value": 8300,
+    "category": "A"
+  },
+  {
+    "id": 84,
+    "name": "Record 84",
+    "value": 8400,
+    "category": "B"
+  },
+  {
+    "id": 85,
+    "name": "Record 85",
+    "value": 8500,
+    "category": "C"
+  },
+  {
+    "id": 86,
+    "name": "Record 86",
+    "value": 8600,
+    "category": "A"
+  },
+  {
+    "id": 87,
+    "name": "Record 87",
+    "value": 8700,
+    "category": "B"
+  },
+  {
+    "id": 88,
+    "name": "Record 88",
+    "value": 8800,
+    "category": "C"
+  },
+  {
+    "id": 89,
+    "name": "Record 89",
+    "value": 8900,
+    "category": "A"
+  },
+  {
+    "id": 90,
+    "name": "Record 90",
+    "value": 9000,
+    "category": "B"
+  },
+  {
+    "id": 91,
+    "name": "Record 91",
+    "value": 9100,
+    "category": "C"
+  },
+  {
+    "id": 92,
+    "name": "Record 92",
+    "value": 9200,
+    "category": "A"
+  },
+  {
+    "id": 93,
+    "name": "Record 93",
+    "value": 9300,
+    "category": "B"
+  },
+  {
+    "id": 94,
+    "name": "Record 94",
+    "value": 9400,
+    "category": "C"
+  },
+  {
+    "id": 95,
+    "name": "Record 95",
+    "value": 9500,
+    "category": "A"
+  },
+  {
+    "id": 96,
+    "name": "Record 96",
+    "value": 9600,
+    "category": "B"
+  },
+  {
+    "id": 97,
+    "name": "Record 97",
+    "value": 9700,
+    "category": "C"
+  },
+  {
+    "id": 98,
+    "name": "Record 98",
+    "value": 9800,
+    "category": "A"
+  },
+  {
+    "id": 99,
+    "name": "Record 99",
+    "value": 9900,
+    "category": "B"
+  },
+  {
+    "id": 100,
+    "name": "Record 100",
+    "value": 10000,
+    "category": "C"
+  }
+]
