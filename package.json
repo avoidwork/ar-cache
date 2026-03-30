@@ -16,6 +16,10 @@
   },
   "keywords": [],
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avoidwork/tiny-arc.git"
+  },
   "license": "BSD-3-Clause",
   "type": "module",
   "main": "dist/tiny-arc.cjs",
