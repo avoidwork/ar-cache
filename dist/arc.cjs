@@ -38,9 +38,10 @@ class ARC {
 			return undefined;
 		}
 
+		// Move to back of respective list to maintain LRU order within the list
 		if (this.t1.has(key)) {
 			this.t1.delete(key);
-			this.t2.set(key, true);
+			this.t1.set(key, true);
 		} else if (this.t2.has(key)) {
 			this.t2.delete(key);
 			this.t2.set(key, true);
@@ -57,7 +58,14 @@ class ARC {
 	set(key, value) {
 		if (this.cache.has(key)) {
 			this.cache.set(key, value);
-			this.get(key);
+			// Promote T1->T2 on re-access (update), refresh T2 position
+			if (this.t1.has(key)) {
+				this.t1.delete(key);
+				this.t2.set(key, true);
+			} else if (this.t2.has(key)) {
+				this.t2.delete(key);
+				this.t2.set(key, true);
+			}
 			return;
 		}
 
@@ -91,19 +99,45 @@ class ARC {
 		while (this.cache.size >= this.#size) {
 			let delKey;
 			let evicted;
-			if (
-				this.t1.size > 0 &&
-				(this.#p >= this.#size || (this.#p < this.#size && this.b1.size < this.b2.size))
-			) {
-				delKey = this.t2.keys().next().value;
-				if (delKey !== undefined) {
+			// Per ARC: evict based on ghost list sizes to balance T1/T2
+			// If both ghost lists are empty, default to evicting from T1 (LRU behavior)
+			if (this.b1.size === 0 && this.b2.size === 0) {
+				// Initial state: evict from T1 (standard LRU)
+				if (this.t1.size > 0) {
+					delKey = this.t1.keys().next().value;
+					this.t1.delete(delKey);
+					this.b1.set(delKey, true);
+					evicted = delKey;
+				} else if (this.t2.size > 0) {
+					delKey = this.t2.keys().next().value;
+					this.t2.delete(delKey);
+					this.b2.set(delKey, true);
+					evicted = delKey;
+				}
+			} else if (this.b1.size < this.b2.size) {
+				// B2 is larger, meaning we've been evicting too many frequent entries
+				// Evict from T1 to make room for T2 to grow
+				if (this.t1.size > 0) {
+					delKey = this.t1.keys().next().value;
+					this.t1.delete(delKey);
+					this.b1.set(delKey, true);
+					evicted = delKey;
+				} else if (this.t2.size > 0) {
+					delKey = this.t2.keys().next().value;
 					this.t2.delete(delKey);
 					this.b2.set(delKey, true);
 					evicted = delKey;
 				}
 			} else {
-				delKey = this.t1.keys().next().value;
-				if (delKey !== undefined) {
+				// B1 >= B2, meaning we've been evicting too many recent entries
+				// Evict from T2 to make room for T1 to grow
+				if (this.t2.size > 0) {
+					delKey = this.t2.keys().next().value;
+					this.t2.delete(delKey);
+					this.b2.set(delKey, true);
+					evicted = delKey;
+				} else if (this.t1.size > 0) {
+					delKey = this.t1.keys().next().value;
 					this.t1.delete(delKey);
 					this.b1.set(delKey, true);
 					evicted = delKey;
@@ -111,6 +145,11 @@ class ARC {
 			}
 			if (evicted !== undefined && this.cache.has(evicted)) {
 				this.cache.delete(evicted);
+			}
+			/* node:coverage ignore next 4 */
+			// Safety: if no keys could be evicted, break to avoid infinite loop
+			if (evicted === undefined) {
+				break;
 			}
 		}
 
@@ -123,35 +162,20 @@ class ARC {
 	 * @param {string|number} key - The key to delete
 	 */
 	delete(key) {
+		// Remove from cache if present
 		if (this.cache.has(key)) {
 			this.cache.delete(key);
 			this.t1.delete(key);
 			this.t2.delete(key);
+			// Also remove from ghost lists if present
 			this.b1.delete(key);
 			this.b2.delete(key);
 			return;
 		}
 
-		if (this.b1.has(key)) {
-			this.#p = Math.max(0, this.#p - Math.floor(this.b2.size / Math.max(1, this.b1.size)));
-			const delKey = this.t2.keys().next().value;
-			if (delKey !== undefined) {
-				this.t2.delete(delKey);
-				this.b2.set(delKey, true);
-			}
-			this.b1.delete(key);
-		} else if (this.b2.has(key)) {
-			this.#p = Math.min(
-				this.#size,
-				this.#p + Math.floor(this.b1.size / Math.max(1, this.b2.size)),
-			);
-			const delKey = this.t1.keys().next().value;
-			if (delKey !== undefined) {
-				this.t1.delete(delKey);
-				this.b1.set(delKey, true);
-			}
-			this.b2.delete(key);
-		}
+		// Remove from ghost lists if present (just remove, no compensation)
+		this.b1.delete(key);
+		this.b2.delete(key);
 	}
 
 	/**
