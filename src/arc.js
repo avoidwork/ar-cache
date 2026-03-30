@@ -79,7 +79,7 @@ export class ARC {
 				this.t1.delete(delKey);
 				this.b1.set(delKey, true);
 			}
-			this.t1.set(key, true);
+			this.t2.set(key, true);
 			this.cache.set(key, value);
 			return;
 		}
@@ -215,24 +215,6 @@ export class ARC {
 			size: this.size,
 			entries: [...this.entries()],
 		};
-	}
-
-	/**
-	 * Adjust cache boundaries between t1/t2 and b1/b2 lists
-	 * Maintains adaptive balance based on access patterns
-	 */
-	adjust() {
-		while (this.t1.size > this.#p) {
-			const key = this.t1.keys().next().value;
-			this.t1.delete(key);
-			this.b1.set(key, true);
-		}
-
-		while (this.t2.size > this.#size - this.#p) {
-			const key = this.t2.keys().next().value;
-			this.t2.delete(key);
-			this.b2.set(key, true);
-		}
 	}
 }
 

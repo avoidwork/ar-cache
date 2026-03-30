@@ -224,6 +224,31 @@ test("ARC class - cache at capacity eviction", () => {
 	assert.strictEqual(cache.has("e"), true);
 });
 
+test("ARC class - B1 ghost hit in set", () => {
+	const cache = new ARC(4);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("c", 3);
+	cache.set("d", 4);
+	cache.set("e", 5);
+	assert.ok(cache.b1.has("a"));
+	cache.set("a", 100);
+	assert.strictEqual(cache.get("a"), 100);
+});
+
+test("ARC class - B1 ghost hit after multiple evictions", () => {
+	const cache = new ARC(4);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("c", 3);
+	cache.set("d", 4);
+	cache.set("e", 5);
+	cache.set("f", 6);
+	assert.ok(cache.b1.has("a"));
+	cache.set("a", 100);
+	assert.strictEqual(cache.get("a"), 100);
+});
+
 test("ARC class - get t1 to t2 promotion path", () => {
 	const cache = new ARC(4);
 	cache.set("a", 1);
@@ -231,6 +256,43 @@ test("ARC class - get t1 to t2 promotion path", () => {
 	cache.get("a");
 	assert.strictEqual(cache.t1.has("a"), false);
 	assert.strictEqual(cache.t2.has("a"), true);
+});
+
+test("ARC class - adjust t1 boundary", () => {
+	const cache = new ARC(6);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("c", 3);
+	cache.set("d", 4);
+	cache.get("a");
+	cache.get("a");
+	cache.get("b");
+	cache.get("b");
+	cache.set("e", 5);
+	assert.strictEqual(cache.size, 5);
+});
+
+test("ARC class - T2 promotion on multiple hits", () => {
+	const cache = new ARC(4);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.get("a");
+	cache.get("b");
+	cache.get("a");
+	cache.get("b");
+	assert.strictEqual(cache.t2.has("a"), true);
+	assert.strictEqual(cache.t2.has("b"), true);
+});
+
+test("ARC class - cache at capacity eviction", () => {
+	const cache = new ARC(4);
+	cache.set("a", 1);
+	cache.set("b", 2);
+	cache.set("c", 3);
+	cache.set("d", 4);
+	cache.set("e", 5);
+	assert.strictEqual(cache.size, 4);
+	assert.strictEqual(cache.has("e"), true);
 });
 
 test("ARC class - adjust t1 boundary", () => {
