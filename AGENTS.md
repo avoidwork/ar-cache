@@ -2,17 +2,17 @@
 
 ## Project Overview
 
-**tiny-arc** - A minimal ARC (Adaptive Replacement Cache) implementation in JavaScript.
+**ar-cache** - A minimal ARC (Adaptive Replacement Cache) implementation in JavaScript.
 
 ## Project Structure
 
 ```
-/home/jason/projects/tiny-arc/
+/ar-cache/
 ├── src/
 │   └── arc.js          # ARC class implementation
 ├── dist/               # Built output (generated)
-│   ├── tiny-arc.cjs    # CommonJS build
-│   └── tiny-arc.js     # ES Module build
+│   ├── ar-cache.cjs    # CommonJS build
+│   └── ar-cache.js     # ES Module build
 ├── tests/unit/         # Unit tests directory
 ├── node_modules/       # Dependencies (gitignored)
 ├── .gitignore
@@ -103,8 +103,8 @@ Based on the [ARC algorithm](https://en.wikipedia.org/wiki/Adaptive_replacement_
 
 1. Rollup reads `./src/arc.js` as entry point
 2. Outputs two bundles to `dist/`:
-   - `tiny-arc.cjs` - CommonJS with named exports
-   - `tiny-arc.js` - ES Module with named exports
+   - `ar-cache.cjs` - CommonJS with named exports
+   - `ar-cache.js` - ES Module with named exports
 3. Both include generated banner with copyright info
 
 ## Development Workflow
@@ -139,4 +139,4 @@ When ready to publish:
 - `node_modules` and `dist` are gitignored
 - Package type is ESM (`"type": "module"`)
 - Exports field in package.json defines dual CJS/ESM support
-- Main entry points: `./dist/tiny-arc.cjs` (require) and `./dist/tiny-arc.js` (import)
+- Main entry points: `./dist/ar-cache.cjs` (require) and `./dist/ar-cache.js` (import)

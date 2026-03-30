@@ -1,4 +1,4 @@
-# Tiny ARC
+# Adaptive Replacement Cache
 
 [![npm version](https://badge.fury.io/js/tiny-arc.svg)](https://badge.fury.io/js/tiny-arc)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)

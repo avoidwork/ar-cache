@@ -1,6 +1,6 @@
 # Code Style Guide
 
-This document outlines the coding conventions and style guidelines for the `tiny-arc` project.
+This document outlines the coding conventions and style guidelines for the `ar-cache` project.
 
 ## Overview
 

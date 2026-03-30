@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tiny-arc` library implements the Adaptive Replacement Cache (ARC) algorithm, which adaptively balances between recently accessed and frequently accessed items to maximize cache hit rates.
+The `ar-cache` library implements the Adaptive Replacement Cache (ARC) algorithm, which adaptively balances between recently accessed and frequently accessed items to maximize cache hit rates.
 
 ## Architecture
 
