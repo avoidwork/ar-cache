@@ -127,7 +127,7 @@ test("ARC class - update existing key", () => {
 });
 
 test("ARC class - arc factory", () => {
-	const cache = arc({ size: 50 });
+	const cache = arc(50);
 	assert.ok(cache instanceof ARC);
 	assert.strictEqual(cache.maxSize, 50);
 });
