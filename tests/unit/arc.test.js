@@ -566,25 +566,48 @@ test("ARC class - fallback eviction when T1 is empty (initial state)", () => {
 });
 
 test("ARC class - fallback eviction when T1 is empty (|B1| < |B2|)", () => {
-	const cache = new ARC(3);
-	// Set up: T2 has entries, B2 is larger than B1
+	const cache = new ARC(2);
+	// Set up: T2 has entries, B2 is larger than B1, T1 is empty
 	cache.set(records[0].id, records[0]);
 	cache.set(records[1].id, records[1]);
+	// Promote both to T2
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	// Now T1 is empty, T2 has 2 entries
+	assert.strictEqual(cache.t1.size, 0);
+	assert.strictEqual(cache.t2.size, 2);
+
+	// Manually add entries to B2 to make |B2| > |B1|
+	cache.b2.set("ghost1", true);
+	cache.b2.set("ghost2", true);
+	assert.strictEqual(cache.b1.size, 0);
+	assert.strictEqual(cache.b2.size, 2);
+
+	// Add another entry - should try to evict from T1 (since |B1| < |B2|),
+	// but T1 is empty, so fallback to T2 (lines 117-121)
 	cache.set(records[2].id, records[2]);
-	// Promote to T2
+	assert.strictEqual(cache.size, 2);
+	// T1 should have the new entry, T2 should have 1 remaining
+	assert.strictEqual(cache.t1.size, 1);
+	assert.strictEqual(cache.t2.size, 1);
+});
+
+test("ARC class - safety break when both T1 and T2 are empty", () => {
+	const cache = new ARC(1);
 	cache.set(records[0].id, records[0]);
+	assert.strictEqual(cache.size, 1);
+	assert.strictEqual(cache.t1.size, 1);
+
+	// Manually empty T1 and T2 to trigger safety break
+	cache.t1.clear();
+	cache.t2.clear();
+	// Also need to remove from cache to simulate the edge case
+	cache.cache.clear();
+
+	// This should not hang - safety break should trigger
 	cache.set(records[1].id, records[1]);
-	// Evict one to B1
-	cache.set(records[3].id, records[3]);
-	// Manually add to B2 to make |B2| > |B1|
-	cache.b2.set("ghost", true);
-
-	assert.strictEqual(cache.b1.size, 1);
-	assert.strictEqual(cache.b2.size, 1);
-
-	// Add another entry - should try to evict from T1, fallback to T2
-	cache.set(records[4].id, records[4]);
-	assert.strictEqual(cache.size, 3);
+	assert.strictEqual(cache.size, 1);
+	assert.strictEqual(cache.has(records[1].id), true);
 });
 
 test("ARC class - safety break when no keys can be evicted", () => {
