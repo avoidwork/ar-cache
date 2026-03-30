@@ -110,6 +110,22 @@ export class ARC {
 	}
 
 	/**
+	 * Adjust p boundary based on ghost list sizes
+	 */
+	adjust() {
+		if (this.b1.size > 0 && this.b2.size > 0) {
+			if (this.#p > 0 && this.b1.size >= this.b2.size) {
+				this.#p = Math.max(0, this.#p - Math.max(1, Math.floor(this.b2.size / this.b1.size)));
+			} else if (this.#p < this.#size && this.b1.size < this.b2.size) {
+				this.#p = Math.min(
+					this.#size,
+					this.#p + Math.max(1, Math.floor(this.b1.size / this.b2.size)),
+				);
+			}
+		}
+	}
+
+	/**
 	 * Delete key from cache
 	 * @param {string|number} key - The key to delete
 	 */

@@ -348,3 +348,66 @@ test("ARC class - bulk insert with synthesized records", () => {
 		assert.strictEqual(cache.has(record.id), true);
 	});
 });
+
+test("ARC class - B2 ghost hit", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.delete(records[0].id);
+	cache.set(records[0].id, records[0]);
+	const updatedRecord = { ...records[0], value: 200 };
+	cache.set(records[0].id, updatedRecord);
+	assert.strictEqual(cache.get(records[0].id), updatedRecord);
+});
+
+test("ARC class - T2 promotion and eviction", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	assert.strictEqual(cache.t2.has(records[0].id), true);
+	assert.strictEqual(cache.t2.has(records[1].id), true);
+	cache.set(records[2].id, records[2]);
+	cache.set(records[3].id, records[3]);
+	cache.set(records[4].id, records[4]);
+	assert.strictEqual(cache.size, 4);
+});
+
+test("ARC class - B1 ghost hit with t2 entries", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.delete(records[0].id);
+	cache.set(records[2].id, records[2]);
+	cache.set(records[3].id, records[3]);
+	cache.set(records[4].id, records[4]);
+	cache.set(records[0].id, records[0]);
+	assert.strictEqual(cache.get(records[0].id), records[0]);
+});
+
+test("ARC class - B2 ghost hit with t1 entries", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.get(records[0].id);
+	cache.get(records[1].id);
+	cache.delete(records[1].id);
+	cache.set(records[2].id, records[2]);
+	cache.set(records[3].id, records[3]);
+	cache.set(records[4].id, records[4]);
+	cache.set(records[1].id, records[1]);
+	assert.strictEqual(cache.get(records[1].id), records[1]);
+});
