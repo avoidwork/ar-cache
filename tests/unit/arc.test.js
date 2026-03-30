@@ -529,3 +529,71 @@ test("ARC class - B2 ghost hit via set with T1 eviction", () => {
 	assert.strictEqual(cache.t1.size, 1);
 	assert.strictEqual(cache.get(records[4].id), records[4]);
 });
+
+test("ARC class - T2 refresh when updating existing T2 entry", () => {
+	const cache = new ARC(4);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	// Promote to T2
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	assert.strictEqual(cache.t2.size, 2);
+
+	// Update existing T2 entry - should refresh position in T2
+	const updated0 = { ...records[0], value: 100 };
+	cache.set(records[0].id, updated0);
+	assert.strictEqual(cache.t2.has(records[0].id), true);
+	assert.strictEqual(cache.get(records[0].id).value, 100);
+});
+
+test("ARC class - fallback eviction when T1 is empty (initial state)", () => {
+	const cache = new ARC(2);
+	// Fill T2 directly by promoting entries
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	assert.strictEqual(cache.t1.size, 0);
+	assert.strictEqual(cache.t2.size, 2);
+
+	// Add new entry - T1 is empty, should fallback to evict from T2
+	cache.set(records[2].id, records[2]);
+	assert.strictEqual(cache.size, 2);
+	// T1 has the new entry, T2 has one remaining
+	assert.strictEqual(cache.t1.size, 1);
+	assert.strictEqual(cache.t2.size, 1);
+	assert.strictEqual(cache.b2.size, 1); // One entry evicted to B2
+});
+
+test("ARC class - fallback eviction when T1 is empty (|B1| < |B2|)", () => {
+	const cache = new ARC(3);
+	// Set up: T2 has entries, B2 is larger than B1
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	cache.set(records[2].id, records[2]);
+	// Promote to T2
+	cache.set(records[0].id, records[0]);
+	cache.set(records[1].id, records[1]);
+	// Evict one to B1
+	cache.set(records[3].id, records[3]);
+	// Manually add to B2 to make |B2| > |B1|
+	cache.b2.set("ghost", true);
+
+	assert.strictEqual(cache.b1.size, 1);
+	assert.strictEqual(cache.b2.size, 1);
+
+	// Add another entry - should try to evict from T1, fallback to T2
+	cache.set(records[4].id, records[4]);
+	assert.strictEqual(cache.size, 3);
+});
+
+test("ARC class - safety break when no keys can be evicted", () => {
+	const cache = new ARC(1);
+	cache.set(records[0].id, records[0]);
+	assert.strictEqual(cache.size, 1);
+
+	// This should not hang - safety break should trigger
+	cache.set(records[1].id, records[1]);
+	assert.strictEqual(cache.size, 1);
+	assert.strictEqual(cache.has(records[1].id), true);
+});
