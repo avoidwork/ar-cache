@@ -275,7 +275,7 @@ According to the [ARC algorithm](https://en.wikipedia.org/wiki/Adaptive_replacem
 ```javascript
 const cache = new ARC(10);
 // #p starts at 0
-// t1 size = 0, t2 size = 10
+// t1 = [], t2 = [] (both empty initially)
 
 cache.set('a', 1); // 'a' in t1
 // #p = 0, t1 = ['a'], t2 = []
@@ -351,7 +351,7 @@ this.b2.delete(key);
 // Adjust #p and evict opposite list to compensate
 ```
 
-**Important:** The current implementation adjusts `#p` when deleting from ghost lists but performs naive removal. This can create an imbalance if multiple keys are deleted from B1 while B2 has grown.
+**Important:** The current implementation performs naive removal from all lists without adjusting `#p`. This can create an imbalance if multiple keys are deleted from B1 while B2 has grown, breaking the algorithm's adaptive balancing capability.
 
 ### Clear Operation
 
@@ -371,7 +371,7 @@ this.b2.clear();
 |-----------|-----------------|-------|
 | get | O(1) | Map lookups are constant time |
 | set | O(n) | May evict n items before insertion |
-| delete | O(1) | Direct Map deletions (but may adjusting p) |
+| delete | O(1) | Direct Map deletions |
 | has | O(1) | Map lookup |
 | clear | O(1) | Map.clear |
 | size | O(1) | Map size property |
@@ -413,5 +413,3 @@ When evicting, we check all lists because:
 1. The `#p` boundary may move items between lists
 2. A key might be in any list depending on access pattern
 3. Complete cleanup prevents memory leaks and stale references
-
-## The p Boundary
