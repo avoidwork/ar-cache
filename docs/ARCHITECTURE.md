@@ -105,6 +105,74 @@ Where:
 - `!` = actual cache boundary
 - `^` = target size for T1 (controlled by `#p`)
 
+## Mathematical Foundation
+
+The ARC algorithm uses mathematical formulas to adaptively balance between recency and frequency based on observed access patterns.
+
+### Notation
+
+Let:
+- $C$ = cache capacity (maxSize)
+- $p$ = target size for T1 boundary parameter
+- $|T1|$ = current size of T1 list
+- $|T2|$ = current size of T2 list  
+- $|B1|$ = current size of B1 ghost list
+- $|B2|$ = current size of B2 ghost list
+- $L1 = T1 \cup B1$ = combined L1 (recent) list
+- $L2 = T2 \cup B2$ = combined L2 (frequent) list
+
+### Ghost Hit Adjustments
+
+When a ghost hit occurs, $p$ is adjusted using these formulas:
+
+**B1 Ghost Hit** (entry re-entered that was evicted from T1):
+$$p = \min\left(C, p + \left\lfloor \frac{|B2|}{|B1|} \right\rfloor \right)$$
+
+This increases T1 size because the re-accessed entry was recently evicted, suggesting we should favor recency.
+
+**B2 Ghost Hit** (entry re-entered that was evicted from T2):
+$$p = \max\left(0, p - \left\lfloor \frac{|B1|}{|B2|} \right\rfloor \right)$$
+
+This decreases T1 size because the re-accessed entry was from the frequent list, suggesting we should favor frequency.
+
+### Eviction Logic
+
+When evicting from T1 or T2, the algorithm uses this comparison:
+
+$$\text{evict from T2 if: } |T1| > 0 \land (p \ge C \lor (p < C \land |B1| < |B2|))$$
+
+Otherwise evict from T1.
+
+### Size Constraints
+
+The algorithm maintains these invariants:
+- $|T1| + |T2| + |B1| + |B2| \le C$
+- $0 \le p \le C$
+- $|T1| \le p$
+- $|T2| \le C - p$
+
+### Visual Representation
+
+The combined directory can be visualized as:
+
+$$\ldots [\ \ \ [B1] \leftarrow [T1] \leftrightarrow [T2] \rightarrow [B2]\ \ ] \ldots$$
+
+Where:
+- $!$ represents the actual cache boundary ($|T1| + |T2|$)
+- $\wedge$ represents the target boundary ($p$)
+- $C$ is the fixed cache size
+
+### Proof of Adaptive Behavior
+
+The ghost hit formulas ensure $p$ converges to the optimal balance:
+
+1. When B1 gets more hits, $|B1|$ grows relative to $|B2|$
+2. This causes $p$ to increase (favoring T1/recency)
+3. When B2 gets more hits, $|B2|$ grows relative to $|B1|$
+4. This causes $p$ to decrease (favoring T2/frequency)
+
+The $\lfloor \frac{|B2|}{|B1|} \rfloor$ and $\lfloor \frac{|B1|}{|B2|} \rfloor$ terms provide proportional adjustment based on the relative sizes of the ghost lists, ensuring smooth adaptation without oscillation.
+
 ## Data Flow
 
 ### Retrieval Flow get
@@ -346,78 +414,4 @@ When evicting, we check all lists because:
 2. A key might be in any list depending on access pattern
 3. Complete cleanup prevents memory leaks and stale references
 
-### Why UseTransient and Stable Lists?
-
-This design allows the cache to:
-- Quickly identify recently accessed items (t1 and b1)
-- Identify frequently accessed items (t2 and b2)
-- Make intelligent eviction decisions based on patterns
-- Maintain a hybrid of LRU (recency) and LFU (frequency) behavior
-
-## Mathematical Foundation
-
-The ARC algorithm uses mathematical formulas to adaptively balance between recency and frequency based on observed access patterns.
-
-### Notation
-
-Let:
-- $C$ = cache capacity (maxSize)
-- $p$ = target size for T1 boundary parameter
-- $|T1|$ = current size of T1 list
-- $|T2|$ = current size of T2 list  
-- $|B1|$ = current size of B1 ghost list
-- $|B2|$ = current size of B2 ghost list
-- $L1 = T1 \cup B1$ = combined L1 (recent) list
-- $L2 = T2 \cup B2$ = combined L2 (frequent) list
-
-### Ghost Hit Adjustments
-
-When a ghost hit occurs, $p$ is adjusted using these formulas:
-
-**B1 Ghost Hit** (entry re-entered that was evicted from T1):
-$$p = \min\left(C, p + \left\lfloor \frac{|B2|}{|B1|} \right\rfloor \right)$$
-
-This increases T1 size because the re-accessed entry was recently evicted, suggesting we should favor recency.
-
-**B2 Ghost Hit** (entry re-entered that was evicted from T2):
-$$p = \max\left(0, p - \left\lfloor \frac{|B1|}{|B2|} \right\rfloor \right)$$
-
-This decreases T1 size because the re-accessed entry was from the frequent list, suggesting we should favor frequency.
-
-### Eviction Logic
-
-When evicting from T1 or T2, the algorithm uses this comparison:
-
-$$\text{evict from T2 if: } |T1| > 0 \land (p \ge C \lor (p < C \land |B1| < |B2|))$$
-
-Otherwise evict from T1.
-
-### Size Constraints
-
-The algorithm maintains these invariants:
-- $|T1| + |T2| + |B1| + |B2| \le C$
-- $0 \le p \le C$
-- $|T1| \le p$
-- $|T2| \le C - p$
-
-### Visual Representation
-
-The combined directory can be visualized as:
-
-$$\ldots [\ \ \ [B1] \leftarrow [T1] \leftrightarrow [T2] \rightarrow [B2]\ \ ] \ldots$$
-
-Where:
-- $!$ represents the actual cache boundary ($|T1| + |T2|$)
-- $\wedge$ represents the target boundary ($p$)
-- $C$ is the fixed cache size
-
-### Proof of Adaptive Behavior
-
-The ghost hit formulas ensure $p$ converges to the optimal balance:
-
-1. When B1 gets more hits, $|B1|$ grows relative to $|B2|$
-2. This causes $p$ to increase (favoring T1/recency)
-3. When B2 gets more hits, $|B2|$ grows relative to $|B1|$
-4. This causes $p$ to decrease (favoring T2/frequency)
-
-The $\lfloor \frac{|B2|}{|B1|} \rfloor$ and $\lfloor \frac{|B1|}{|B2|} \rfloor$ terms provide proportional adjustment based on the relative sizes of the ghost lists, ensuring smooth adaptation without oscillation.
+## The p Boundary
