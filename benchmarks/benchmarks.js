@@ -157,4 +157,80 @@ console.log(`Cache size after updates: ${updateCache.size}\n`);
 // Test factory with default size
 const defaultCache = arc();
 console.log(`Default cache maxSize: ${defaultCache.maxSize}`);
-console.log(`Default cache size: ${defaultCache.size}`);
+console.log(`Default cache size: ${defaultCache.size}\n`);
+
+// Test p boundary getter
+const pCache = new ARC(100);
+const pTestKeys = Array.from({ length: 200 }, (_, i) => `pkey${i}`);
+for (const key of pTestKeys) {
+	pCache.set(key, `value${key}`);
+}
+console.log(`P boundary after operations: ${pCache.p}`);
+console.log();
+
+// Test ghost hit patterns (B1 and B2 hits that adjust p)
+const ghostCache = new ARC(50);
+const ghostKeys1 = Array.from({ length: 50 }, (_, i) => `ghost1_${i}`);
+for (const key of ghostKeys1) {
+	ghostCache.set(key, `value${key}`);
+}
+const evictedB1Key = ghostKeys1[0];
+ghostCache.delete(evictedB1Key);
+ghostCache.set(evictedB1Key, `replacement`);
+console.log(`P after B1 ghost hit: ${ghostCache.p}`);
+
+const ghostKeys2 = Array.from({ length: 50 }, (_, i) => `ghost2_${i}`);
+for (const key of ghostKeys2) {
+	ghostCache.set(key, `value${key}`);
+}
+const evictedB2Key = ghostKeys2[0];
+ghostCache.get(evictedB2Key);
+ghostCache.delete(evictedB2Key);
+ghostCache.set(evictedB2Key, `replacement`);
+console.log(`P after B2 ghost hit: ${ghostCache.p}\n`);
+
+// Test factory with edge case sizes
+console.time("factory with size 0");
+const zeroSizeCache = arc({ size: 0 });
+console.timeEnd("factory with size 0");
+console.log(`Size 0 cache maxSize: ${zeroSizeCache.maxSize}`);
+
+console.time("factory with negative size");
+const negSizeCache = arc({ size: -10 });
+console.timeEnd("factory with negative size");
+console.log(`Negative size cache maxSize: ${negSizeCache.maxSize}\n`);
+
+// Test delete-heavy workload (stress test for p adjustments)
+const deleteCache = new ARC(100);
+const deleteKeys = Array.from({ length: 200 }, (_, i) => `delkey${i}`);
+for (const key of deleteKeys) {
+	deleteCache.set(key, `value${key}`);
+}
+console.time("delete 150 items");
+for (let i = 0; i < 150; i++) {
+	deleteCache.delete(deleteKeys[i]);
+}
+console.timeEnd("delete 150 items");
+console.log(`P after deletes: ${deleteCache.p}`);
+console.log(`Cache size: ${deleteCache.size}\n`);
+
+// Test mixed operations with iteration
+const mixedCache = new ARC(500);
+const mixedKeys = Array.from({ length: 1000 }, (_, i) => `mixed${i}`);
+for (const key of mixedKeys) {
+	mixedCache.set(key, `value${key}`);
+}
+for (let i = 0; i < 500; i++) {
+	if (i % 2 === 0) {
+		mixedCache.get(mixedKeys[i]);
+	} else {
+		mixedCache.delete(mixedKeys[i]);
+	}
+}
+console.time("iterate after mixed operations");
+[...mixedCache.keys()].length;
+[...mixedCache.values()].length;
+[...mixedCache.entries()].length;
+console.timeEnd("iterate after mixed operations");
+console.log(`P after mixed ops: ${mixedCache.p}`);
+console.log(`Cache size: ${mixedCache.size}\n`);
