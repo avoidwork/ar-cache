@@ -244,12 +244,11 @@ class ARC {
 
 /**
  * Factory function to create an ARC cache instance
- * @param {Object} [options={}] - Configuration options
- * @param {number} [options.size=50] - Maximum cache size
+ * @param {number} [size=50] - Maximum cache size
  * @returns {ARC} - New ARC cache instance
  */
-function arc(options = {}) {
-	return new ARC(options.size || 50);
+function arc(size = 50) {
+	return new ARC(size);
 }
 
 exports.ARC = ARC;
