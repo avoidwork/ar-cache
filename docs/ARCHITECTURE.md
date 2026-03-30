@@ -13,8 +13,8 @@ classDiagram
     class ARC {
         -#size: number
         +cache: Map
-        +p1: Map
-        +p2: Map
+        +b1: Map
+        +b2: Map
         +t1: Map
         +t2: Map
         +constructor(size)
@@ -48,10 +48,10 @@ The ARC implementation maintains 5 maps:
 | Map | Purpose | Contents |
 |-----|---------|----------|
 | `cache` | Main storage | All cached key-value pairs |
-| `p1` | Recently accessed (transient) | Keys accessed once, recently |
-| `p2` | Frequently accessed (stable) | Keys accessed multiple times |
-| `t1` | Recently evicted (transient) | Keys evicted from p1 |
-| `t2` | Frequently evicted (stable) | Keys evicted from p2 |
+| `b1` | Recently accessed (transient) | Keys accessed once, recently |
+| `b2` | Frequently accessed (stable) | Keys accessed multiple times |
+| `t1` | Recently evicted (transient) | Keys evicted from b1 |
+| `t2` | Frequently evicted (stable) | Keys evicted from b2 |
 
 ## Data Flow
 
@@ -68,11 +68,11 @@ sequenceDiagram
         Cache-->>Client: undefined
     else Found
         Cache->>Cache: Check which list
-        alt In p1
-            Cache->>Cache: Move to p2
+        alt In b1
+            Cache->>Cache: Move to b2
             Cache->>Cache: Call adjust
-        else In p2
-            Cache->>Cache: Keep in p2
+        else In b2
+            Cache->>Cache: Keep in b2
         else In t1
             Cache->>Cache: Move to t2
             Cache->>Cache: Call adjust
@@ -104,7 +104,7 @@ sequenceDiagram
             Cache->>Cache: Delete from cache
         end
         Cache->>Cache: Add to cache
-        Cache->>Cache: Add to p1
+        Cache->>Cache: Add to b1
         Cache->>Cache: Call adjust
         Cache-->>Client: Done
     end
@@ -116,32 +116,32 @@ The adjust method maintains balance between the four tracking lists based on acc
 
 ### Algorithm
 
-1. Calculate `delta = max(p1.size - p2.size, 0) / 2`
-2. Calculate targetP1Size floor max maxSize delta div 2
-3. Move excess from p1 to t1 until p1 <= targetP1Size
-4. Calculate targetP2Size = maxSize - targetP1Size
-5. Move excess from p2 to t2 until p2 <= targetP2Size
+1. Calculate `delta = max(b1.size - b2.size, 0) / 2`
+2. Calculate targetb1Size floor max maxSize delta div 2
+3. Move excess from b1 to t1 until b1 <= targetb1Size
+4. Calculate targetb2Size = maxSize - targetb1Size
+5. Move excess from b2 to t2 until b2 <= targetb2Size
 
 ### Visual Representation
 
 ```mermaid
 flowchart TD
     A[adjust called] --> B[Calculate delta]
-    B --> C[Calculate targetP1Size]
-    C --> D[Move from p1 to t1]
-    D --> E[Calculate targetP2Size]
-    E --> F[Move from p2 to t2]
+    B --> C[Calculate targetb1Size]
+    C --> D[Move from b1 to t1]
+    D --> E[Calculate targetb2Size]
+    E --> F[Move from b2 to t2]
     F --> G[Balance achieved]
 
     subgraph Lists
-        P1[p1 transient recently accessed]
-        P2[p2 stable frequently accessed]
+        b1[b1 transient recently accessed]
+        b2[b2 stable frequently accessed]
         T1[t1 recently evicted]
         T2[t2 frequently evicted]
         C[cache all entries]
         
-        P1 --> C
-        P2 --> C
+        b1 --> C
+        b2 --> C
         T1 --> C
         T2 --> C
     end
@@ -152,9 +152,9 @@ flowchart TD
 When the cache is at capacity and a new item is inserted:
 
 1. **Loop while `cache.size >= maxSize`**:
-    - Try to evict from p1 first FIFO
+    - Try to evict from b1 first FIFO
     - Then from t1
-    - Then from p2
+    - Then from b2
     - Then from t2
 2. Remove from all four lists ensures complete cleanup
 3. Remove from main cache
@@ -180,9 +180,9 @@ stateDiagram-v2
 
 | Current State | Action | New State |
 |---------------|--------|-----------|
-| Not in cache | set | p1 transient |
-| p1 transient | get | p2 stable |
-| p2 stable | get | p2 stable moves to end |
+| Not in cache | set | b1 transient |
+| b1 transient | get | b2 stable |
+| b2 stable | get | b2 stable moves to end |
 | t1 evicted | get | t2 evicted stable |
 | t2 evicted | get | t2 evicted stable moves to end |
 | Any | adjust | Balance lists based on access patterns |
@@ -196,8 +196,8 @@ When delete key is called:
 
 ```javascript
 this.cache.delete(key);
-this.p1.delete(key);
-this.p2.delete(key);
+this.b1.delete(key);
+this.b2.delete(key);
 this.t1.delete(key);
 this.t2.delete(key);
 ```
@@ -210,8 +210,8 @@ When clear is called all maps are cleared simultaneously:
 
 ```javascript
 this.cache.clear();
-this.p1.clear();
-this.p2.clear();
+this.b1.clear();
+this.b2.clear();
 this.t1.clear();
 this.t2.clear();
 ```
@@ -246,10 +246,10 @@ export function arc(size = 50) {
 ### Why 5 Maps?
 
 - **cache**: Single source of truth for cached values
-- **p1/p2**: Distinguish between recently and frequently accessed
+- **b1/b2**: Distinguish between recently and frequently accessed
 - **t1/t2**: Track evicted items for adaptive behavior
 
-The p1/p2 and t1/t2 split allows ARC to adaptively determine whether to favor recency or frequency based on observed access patterns.
+The b1/b2 and t1/t2 split allows ARC to adaptively determine whether to favor recency or frequency based on observed access patterns.
 
 ### Why Evict All Lists?
 
@@ -261,7 +261,7 @@ When evicting, all four lists are checked because:
 ### Why Use Transient and Stable Lists?
 
 This design allows the cache to:
-- Quickly identify recently accessed items p1 and t1
-- Identify frequently accessed items p2 and t2
+- Quickly identify recently accessed items b1 and t1
+- Identify frequently accessed items b2 and t2
 - Make intelligent eviction decisions based on patterns
 - Maintain a hybrid of LRU recency and LFU frequency behavior
