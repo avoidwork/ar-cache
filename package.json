@@ -15,7 +15,7 @@
     "benchmarks": "node benchmarks/benchmarks.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "license": "BSD-3-Clause",
   "type": "module",
   "main": "dist/tiny-arc.cjs",
