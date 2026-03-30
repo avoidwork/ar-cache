@@ -25,6 +25,9 @@
     "esm"
   ],
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
+  "engines": {
+    "node": ">=14"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/avoidwork/tiny-arc.git"
